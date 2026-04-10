@@ -1,27 +1,23 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Train Consist Management App
  *
- * UC12: Safety Compliance Check using Streams (allMatch)
+ * UC13: Performance Comparison (Loop vs Stream)
  *
  * @author SPD
- * @version 12.0
+ * @version 13.0
  */
 
-// ---------- GOODS BOGIE CLASS ----------
-class GoodsBogie {
-    String type;   // Cylindrical / Rectangular / Open
-    String cargo;  // Petroleum / Coal / Grain
+// ---------- BOGIE CLASS ----------
+class Bogie {
+    String name;
+    int capacity;
 
-    public GoodsBogie(String type, String cargo) {
-        this.type = type;
-        this.cargo = cargo;
-    }
-
-    @Override
-    public String toString() {
-        return type + " Bogie carrying " + cargo;
+    public Bogie(String name, int capacity) {
+        this.name = name;
+        this.capacity = capacity;
     }
 }
 
@@ -32,34 +28,58 @@ public class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===\n");
 
-        // Create goods bogies
-        List<GoodsBogie> goodsBogies = new ArrayList<>();
+        // 🔥 Create Large Dataset
+        List<Bogie> bogies = new ArrayList<>();
 
-        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
-        goodsBogies.add(new GoodsBogie("Rectangular", "Coal"));
-        goodsBogies.add(new GoodsBogie("Open", "Grain"));
+        for (int i = 0; i < 100000; i++) {
+            bogies.add(new Bogie("Sleeper", (i % 100) + 1));
+        }
 
-        // Uncomment below to test invalid case
-        // goodsBogies.add(new GoodsBogie("Cylindrical", "Coal"));
+        // ===============================
+        // 🔹 LOOP-BASED FILTERING
+        // ===============================
+        long startLoop = System.nanoTime();
 
-        System.out.println("Goods Bogies:");
-        goodsBogies.forEach(System.out::println);
+        List<Bogie> loopResult = new ArrayList<>();
+        for (Bogie b : bogies) {
+            if (b.capacity > 60) {
+                loopResult.add(b);
+            }
+        }
 
-        // 🔥 SAFETY VALIDATION USING allMatch()
-        boolean isSafe = goodsBogies.stream()
-                .allMatch(b ->
-                        // Rule: Cylindrical → only Petroleum
-                        !b.type.equalsIgnoreCase("Cylindrical")
-                                || b.cargo.equalsIgnoreCase("Petroleum")
-                );
+        long endLoop = System.nanoTime();
+        long loopTime = endLoop - startLoop;
 
-        // Display result
-        System.out.println("\nSafety Compliance Status:");
+        // ===============================
+        // 🔹 STREAM-BASED FILTERING
+        // ===============================
+        long startStream = System.nanoTime();
 
-        if (isSafe) {
-            System.out.println("Train is SAFE ✅");
+        List<Bogie> streamResult = bogies.stream()
+                .filter(b -> b.capacity > 60)
+                .collect(Collectors.toList());
+
+        long endStream = System.nanoTime();
+        long streamTime = endStream - startStream;
+
+        // ===============================
+        // 🔹 OUTPUT RESULTS
+        // ===============================
+        System.out.println("Loop Result Size: " + loopResult.size());
+        System.out.println("Stream Result Size: " + streamResult.size());
+
+        System.out.println("\nExecution Time:");
+        System.out.println("Loop Time   : " + loopTime + " ns");
+        System.out.println("Stream Time : " + streamTime + " ns");
+
+        // Compare
+        System.out.println("\nPerformance Insight:");
+        if (loopTime < streamTime) {
+            System.out.println("Loop is faster ⚡");
+        } else if (streamTime < loopTime) {
+            System.out.println("Stream is faster 🚀");
         } else {
-            System.out.println("Train is UNSAFE ❌");
+            System.out.println("Both have similar performance 🤝");
         }
 
         System.out.println("\nSystem ready for further operations...");
