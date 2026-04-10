@@ -1,12 +1,12 @@
-import java.util.*;
+import java.util.Arrays;
 
 /**
  * Train Consist Management App
  *
- * UC18: Linear Search for Bogie ID
+ * UC19: Binary Search for Bogie ID
  *
  * @author SPD
- * @version 18.0
+ * @version 19.0
  */
 
 public class TrainConsistManagementApp {
@@ -15,31 +15,55 @@ public class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===\n");
 
-        // 🔹 Array of Bogie IDs (Unsorted)
-        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+        // 🔹 Unsorted Bogie IDs
+        String[] bogieIds = {"BG309", "BG101", "BG550", "BG205", "BG412"};
+
+        // 🔹 Sort before Binary Search (IMPORTANT)
+        Arrays.sort(bogieIds);
+
+        System.out.println("Sorted Bogie IDs:");
+        System.out.println(Arrays.toString(bogieIds));
 
         // 🔹 Search Key
-        String searchKey = "BG309";  // Change this to test
+        String searchKey = "BG309";  // Change to test
 
-        boolean found = false;
-
-        // 🔥 LINEAR SEARCH
-        for (int i = 0; i < bogieIds.length; i++) {
-
-            // 🔹 Compare using equals()
-            if (bogieIds[i].equals(searchKey)) {
-                found = true;
-
-                System.out.println("Bogie Found at position: " + i);
-                break; // 🔥 Early termination
-            }
-        }
+        boolean found = binarySearch(bogieIds, searchKey);
 
         // 🔹 Result
-        if (!found) {
-            System.out.println("Bogie ID not found");
+        if (found) {
+            System.out.println("\nBogie ID found: " + searchKey);
+        } else {
+            System.out.println("\nBogie ID not found");
         }
 
         System.out.println("\nSystem ready for further operations...");
+    }
+
+    // 🔥 BINARY SEARCH METHOD
+    public static boolean binarySearch(String[] arr, String key) {
+
+        int low = 0;
+        int high = arr.length - 1;
+
+        while (low <= high) {
+
+            // 🔹 Find middle index
+            int mid = (low + high) / 2;
+
+            // 🔹 Compare using compareTo()
+            int result = arr[mid].compareTo(key);
+
+            if (result == 0) {
+                return true; // Found
+            }
+            else if (result < 0) {
+                low = mid + 1; // Search right half
+            }
+            else {
+                high = mid - 1; // Search left half
+            }
+        }
+
+        return false; // Not found
     }
 }
