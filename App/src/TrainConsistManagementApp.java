@@ -1,12 +1,12 @@
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Train Consist Management App
  *
- * UC16: Bubble Sort for Passenger Bogie Capacities
+ * UC18: Linear Search for Bogie ID
  *
  * @author SPD
- * @version 16.0
+ * @version 18.0
  */
 
 public class TrainConsistManagementApp {
@@ -15,40 +15,30 @@ public class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===\n");
 
-        // 🔹 Unsorted Passenger Bogie Capacities
-        int[] capacities = {72, 56, 24, 70, 60};
+        // 🔹 Array of Bogie IDs (Unsorted)
+        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
 
-        System.out.println("Before Sorting:");
-        System.out.println(Arrays.toString(capacities));
+        // 🔹 Search Key
+        String searchKey = "BG309";  // Change this to test
 
-        // 🔥 BUBBLE SORT IMPLEMENTATION
-        int n = capacities.length;
+        boolean found = false;
 
-        for (int i = 0; i < n - 1; i++) {
+        // 🔥 LINEAR SEARCH
+        for (int i = 0; i < bogieIds.length; i++) {
 
-            // Optimization: track if any swap happens
-            boolean swapped = false;
+            // 🔹 Compare using equals()
+            if (bogieIds[i].equals(searchKey)) {
+                found = true;
 
-            for (int j = 0; j < n - i - 1; j++) {
-
-                // 🔹 Compare adjacent elements
-                if (capacities[j] > capacities[j + 1]) {
-
-                    // 🔹 Swap
-                    int temp = capacities[j];
-                    capacities[j] = capacities[j + 1];
-                    capacities[j + 1] = temp;
-
-                    swapped = true;
-                }
+                System.out.println("Bogie Found at position: " + i);
+                break; // 🔥 Early termination
             }
-
-            // 🔹 If no swaps → already sorted
-            if (!swapped) break;
         }
 
-        System.out.println("\nAfter Sorting:");
-        System.out.println(Arrays.toString(capacities));
+        // 🔹 Result
+        if (!found) {
+            System.out.println("Bogie ID not found");
+        }
 
         System.out.println("\nSystem ready for further operations...");
     }
