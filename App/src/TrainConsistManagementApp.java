@@ -8,13 +8,16 @@ import java.util.stream.Collectors;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import java.util.*;
+import java.util.stream.*;
+
 /**
  * Train Consist Management App
  *
- * UC9: Group Bogies using Stream API (groupingBy)
+ * UC10: Aggregate total seating capacity using Stream reduce()
  *
  * @author SPD
- * @version 9.0
+ * @version 10.0
  */
 
 // ---------- BOGIE CLASS ----------
@@ -40,31 +43,24 @@ public class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===\n");
 
-        // Reuse list (with duplicates for grouping demo)
+        // Reuse bogie list
         List<Bogie> bogies = new ArrayList<>();
 
         bogies.add(new Bogie("Sleeper", 72));
         bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("Sleeper", 70));
         bogies.add(new Bogie("First Class", 80));
-        bogies.add(new Bogie("AC Chair", 60));
+        bogies.add(new Bogie("Sleeper", 70));
 
-        System.out.println("All Bogies:");
+        System.out.println("Bogies:");
         bogies.forEach(System.out::println);
 
-        // 🔥 GROUPING LOGIC
-        Map<String, List<Bogie>> groupedBogies = bogies.stream()
-                .collect(Collectors.groupingBy(b -> b.name));
+        // 🔥 STREAM AGGREGATION
+        int totalSeats = bogies.stream()
+                .map(b -> b.capacity)       // extract capacity
+                .reduce(0, Integer::sum);   // aggregate
 
-        // Display grouped result
-        System.out.println("\nGrouped Bogies:");
-
-        for (Map.Entry<String, List<Bogie>> entry : groupedBogies.entrySet()) {
-            System.out.println("\n" + entry.getKey() + ":");
-            for (Bogie b : entry.getValue()) {
-                System.out.println("  " + b);
-            }
-        }
+        // Display result
+        System.out.println("\nTotal Seating Capacity: " + totalSeats);
 
         System.out.println("\nSystem ready for further operations...");
     }
