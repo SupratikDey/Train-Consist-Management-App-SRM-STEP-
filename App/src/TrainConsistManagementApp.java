@@ -1,12 +1,12 @@
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Train Consist Management App
  *
- * UC19: Binary Search for Bogie ID
+ * UC20: Exception Handling During Search Operations
  *
  * @author SPD
- * @version 19.0
+ * @version 20.0
  */
 
 public class TrainConsistManagementApp {
@@ -15,55 +15,43 @@ public class TrainConsistManagementApp {
 
         System.out.println("=== Train Consist Management App ===\n");
 
-        // 🔹 Unsorted Bogie IDs
-        String[] bogieIds = {"BG309", "BG101", "BG550", "BG205", "BG412"};
+        // 🔹 Bogie Collection (Change to test)
+        String[] bogieIds = {};
+        // String[] bogieIds = {"BG101", "BG205", "BG309"};
 
-        // 🔹 Sort before Binary Search (IMPORTANT)
-        Arrays.sort(bogieIds);
+        String searchKey = "BG205";
 
-        System.out.println("Sorted Bogie IDs:");
-        System.out.println(Arrays.toString(bogieIds));
+        try {
+            boolean found = searchBogie(bogieIds, searchKey);
 
-        // 🔹 Search Key
-        String searchKey = "BG309";  // Change to test
+            if (found) {
+                System.out.println("Bogie ID found: " + searchKey);
+            } else {
+                System.out.println("Bogie ID not found");
+            }
 
-        boolean found = binarySearch(bogieIds, searchKey);
-
-        // 🔹 Result
-        if (found) {
-            System.out.println("\nBogie ID found: " + searchKey);
-        } else {
-            System.out.println("\nBogie ID not found");
+        } catch (IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
         System.out.println("\nSystem ready for further operations...");
     }
 
-    // 🔥 BINARY SEARCH METHOD
-    public static boolean binarySearch(String[] arr, String key) {
+    // 🔥 SEARCH METHOD WITH VALIDATION
+    public static boolean searchBogie(String[] arr, String key) {
 
-        int low = 0;
-        int high = arr.length - 1;
+        // 🔹 FAIL-FAST VALIDATION
+        if (arr == null || arr.length == 0) {
+            throw new IllegalStateException("Cannot search: No bogies available in train");
+        }
 
-        while (low <= high) {
-
-            // 🔹 Find middle index
-            int mid = (low + high) / 2;
-
-            // 🔹 Compare using compareTo()
-            int result = arr[mid].compareTo(key);
-
-            if (result == 0) {
-                return true; // Found
-            }
-            else if (result < 0) {
-                low = mid + 1; // Search right half
-            }
-            else {
-                high = mid - 1; // Search left half
+        // 🔹 LINEAR SEARCH (after validation)
+        for (String id : arr) {
+            if (id.equals(key)) {
+                return true;
             }
         }
 
-        return false; // Not found
+        return false;
     }
 }
